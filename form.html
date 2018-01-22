@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Wenquanyi Micro Hei;
+      background-color: rgb(33, 24, 57);
+    }
+
+    span {
+      color: #fff;
+    }
+
+    .form {
+      position: absolute;
+      top: 50%; 
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+    }
+
+    .form-title {
+      text-align: center;
+      font-size: 36px;
+      color: #fff;
+      padding-bottom: 24px;
+    }
+
+    .title-bottom {
+      width: 66px;
+      height: 2px;
+      background-color: rgb(70, 51, 110);
+      margin: 20px auto 30px auto;
+    }
+
+    .main-form {
+      text-align: center;
+      margin-bottom: 20px;
+      
+    }
+
+    input {
+      font-family: Wenquanyi Micro Hei;
+      width: 240px;
+      height: 20px; 
+      margin: 0 6px;
+      padding: 10px 16px 10px 16px;
+      outline: none;
+      font-size: 14px;
+      vertical-align:middle;
+      background-color: rgb(33, 24, 57);
+      border-radius: 40px;
+      border: 1px solid rgb(70, 51, 110);
+      -webkit-text-fill-color: #fff;
+    }
+
+    .select-form {
+      display: inline-block;
+      width: 240px;
+      height: 20px; 
+      vertical-align: middle;
+      margin: 0 6px;
+      padding: 10px 16px 10px 16px;
+      font-size: 14px;
+      color: #fff;  
+      background-color: rgb(33, 24, 57);
+      border-radius: 40px;
+      border: 1px solid rgb(70, 51, 110);
+    }
+
+    .select-list {
+      visibility: hidden; 
+    }
+
+    .select-list.display-list { 
+      visibility: visible; 
+      position: relative;
+      opacity: 1;
+      top: -54px;
+      left: -17px;
+      width: 276px;
+      height: 140px;
+      font-size: 14px;
+      color: #fff;
+      background-color: rgb(2, 147, 155);
+      z-index: 99;
+      border-radius: 8px;
+
+    }
+
+    .select-list>li {
+      padding: 10px auto;
+      list-style: none;
+      height: 28px;
+      line-height: 28px;
+    }
+
+    .select-list>li:hover {
+      border-radius: 8px;
+      background-color: rgb(0, 118, 129);
+      padding: 10px auto;
+      list-style: none;
+    }
+
+    .select-text {
+      position: absolute;
+      float: left;
+    }
+
+
+    .input-focus {
+      color: rgb(42, 100, 125);
+      border: 1px solid rgb(42, 100, 125);
+      background-color: rgb(37, 33, 69);
+    } 
+    .error-input {
+      color: rgb(112, 37, 101);
+      border: 1px solid rgb(112, 37, 101);
+    }
+
+    .send-button {
+      text-align: center;
+    }
+
+    button {
+      width: 220px;
+      height: 44px;
+      margin-top: 20px;
+      padding: 10px 16px 10px 16px;
+      background-color: #fff;
+      color: rgb(33, 24, 57);
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 40px;
+      border:0;
+      outline: none;  
+    }
+
+     @media screen and (max-width: 480px) {
+      .form-title {
+        padding: 0;
+      }
+      span, input, button {
+        display: block;
+        margin: 10px auto;
+      }
+    } 
+  </style>
+</head>
+<body>
+  <div class="form">
+    <div class="form-title">
+      Get In Touch
+      <div class="title-bottom"></div>
+    </div>
+    <div class="main-form">
+      <span>Hi, I'm</span>
+      <input class="no-empty-input"/>
+      <span> from</span>
+      <input class="no-empty-input"/>
+    </div>
+    <div class="main-form">
+      <span>I would like help with</span>
+      <input class="no-empty-input"/>
+      <span> My budget is</span>
+      <div class="select-form">
+        <div class="select-text"></div>
+        <div class="select-list">
+          <li class="list-item">Under $10,000</li>
+          <li class="list-item">$10,000 - $25,000</li>
+          <li class="list-item">$25,000 - $50,000</li>
+          <li class="list-item">$50,000 - $75,000</li>
+          <li class="list-item">Above $75,000</li>  
+        </div> 
+      </div>
+    </div>
+    <div class="main-form">
+      <span>and you can reach me at</span>
+      <input class="email-input" />
+      <span> I'm looking forward to hearing from you.</span>
+    </div>
+    <div class="send-button">
+      <button>SEND</button>
+    </div>
+  </div>
+
+  <script>
+    //log
+    var log = function() {
+      console.log.apply(console, arguments)
+    }
+
+    // 获取 dom
+    var e = function(selector) {
+      return document.querySelector(selector)
+    }
+
+    // 获取 all dom 
+    var es = function(selector) {
+      return document.querySelectorAll(selector)
+    }
+
+    // 绑定事件
+    var bindEvent = function(element, eventName, callback) {
+      element.addEventListener(eventName, callback)
+    }
+
+    // 为选中的所有元素添加事件
+    var bindAll = function(selector, eventName, callback) {
+      var elements = document.querySelectorAll(selector)
+      for(var i = 0; i < elements.length; i++) {
+        var e = elements[i]
+        bindEvent(e, eventName, callback)
+      }
+    }
+
+    // 是否含有 class
+    var containClass = function(element, className) {
+      return element.classList.contains(className)
+    }
+
+    // 开关 class
+    var toggleClass = function(element, className) {
+      if(!element.classList.contains(className)) {
+        element.classList.add(className)
+      } else {
+        element.classList.remove(className)
+      }
+    }
+
+    // add class
+    var addClass = function(element, className) {
+      if(!element.classList.contains(className)) {
+        element.classList.add(className)
+      }
+    }
+    
+    // remove class
+    var removeClass = function(element, className) {
+      if(element.classList.contains(className)) {
+        element.classList.remove(className)
+      }
+    }
+
+    // 判断 input 是否为空
+    var emptyInput = function(target) {
+      var v = target.value
+      return v === ''
+    }
+
+    // 开关 empty input class
+    var toggleEmptyClass = function(target) {
+      bindEvent(target, 'input', function(e) {
+        var t = e.target
+        if(!emptyInput(t) && !containClass(t, 'input-focus') && containClass(t, 'error-input')) {
+          removeClass(t, 'error-input')
+          addClass(t, 'input-focus')
+        }
+      })
+    }
+
+    // 判断 input 是否为 email
+    var emailInput = function(target) {
+      var v = target.value
+      var reg = new RegExp('^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$')
+      return reg.test(v)
+    }
+
+    var bindEvents = function() {
+      bindAll('.no-empty-input', 'focus', function(e) {
+        var t = e.target
+        if(t.classList.contains('error-input')) {
+          toggleEmptyClass(t)
+        } else {
+          addClass(t, 'input-focus')
+        }
+      })
+
+      bindAll('.no-empty-input', 'blur', function(e) {
+        var t = e.target
+        removeClass(t, 'input-focus')
+        if (emptyInput(t)) {
+          addClass(t, 'error-input')
+        }　
+      })
+
+      bindAll('.email-input', 'focus', function(e) {
+        var t = e.target
+        addClass(t, 'input-focus')
+      })
+
+      bindAll('.email-input', 'input', function(e) {
+        var t = e.target
+        if(!emailInput(t)) {
+          removeClass(t, 'input-focus')
+          addClass(t, 'error-input')
+        } else if(emailInput(t)) {
+          removeClass(t, 'error-input')
+          addClass(t, 'input-focus')
+        }
+      })
+
+      bindAll('.email-input', 'blur', function(e) {
+        var t = e.target
+        if(containClass(t, 'input-focus')) {
+          removeClass(t, 'input-focus')
+        }
+      })
+      
+      var sf = e('.select-form')
+      var st = e('.select-text')
+      var sl = e('.select-list')
+      bindEvent(sf, 'click', function() {
+        toggleClass(sl, 'display-list')
+      })
+
+      bindAll('.list-item', 'click', function(e) {
+        var v = e.target.innerText
+        // log('v', v)
+        st.innerText = v
+      })
+    }
+
+    window.onload = function() {
+      bindEvents()
+    }
+  </script>
+</body>
+</html>
